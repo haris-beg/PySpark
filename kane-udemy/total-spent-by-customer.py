@@ -12,7 +12,8 @@ def parseLine(line):
 lines = sc.textFile("file:///sparkcourse/customer-orders.csv")
 rdd = lines.map(parseLine)
 totalByCustomer = rdd.reduceByKey(lambda x, y: x + y)
-results = totalByCustomer.collect()
+totalByCustomerSorted = totalByCustomer.map(lambda (customerId,amountSpent): (amountSpent,customerId)).sortByKey()
+results = totalByCustomerSorted.collect()
 
 for result in results:
-    print(str(result[0]) + ", {:.2f}".format(result[1]))
+    print(str(result[1]) + ", {:.2f}".format(result[0]))
