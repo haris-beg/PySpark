@@ -3,16 +3,17 @@ from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("local").setAppName("CustomerSpending")
 sc = SparkContext(conf = conf)
 
-def parseLine(line):
+def extractCustomerPricePairs(line):
     fields = line.split(',')
     customerId = int(fields[0])
     amountSpent = float(fields[2])
     return (customerId, amountSpent)
 
-lines = sc.textFile("file:///sparkcourse/customer-orders.csv")
-rdd = lines.map(parseLine)
-totalByCustomer = rdd.reduceByKey(lambda x, y: x + y)
-totalByCustomerSorted = totalByCustomer.map(lambda (customerId,amountSpent): (amountSpent,customerId)).sortByKey()
+input = sc.textFile("file:///sparkcourse/customer-orders.csv")
+mappedInputRDD = input.map(extractCustomerPricePairs)
+totalByCustomer = mappedInputRDD.reduceByKey(lambda x, y: x + y)
+flipped = totalByCustomer.map(lambda (customerId,amountSpent): (amountSpent,customerId))
+totalByCustomerSorted = flipped.sortByKey()
 results = totalByCustomerSorted.collect()
 
 for result in results:
