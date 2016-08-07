@@ -7,13 +7,8 @@ from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("local").setAppName("PopularMovies")
 sc = SparkContext(conf = conf)
 
-def extractMovieIDs(line):
-    fields = line.split()
-    movieId = fields[1]
-    return (movieId, 1)
-
 lines = sc.textFile("file:///SparkCourse/ml-100k/u.data")
-movies = lines.map(extractMovieIDs)
+movies = lines.map(lambda x: (x.split()[1], 1))
 
 ## Calculate the number of ratings for each movie id
 ratingCounts = movies.reduceByKey(lambda x,y : x+y)
