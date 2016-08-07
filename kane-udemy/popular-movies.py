@@ -11,9 +11,9 @@ lines = sc.textFile("file:///SparkCourse/ml-100k/u.data")
 movies = lines.map(lambda x: (x.split()[1], 1))
 
 ## Calculate the number of ratings for each movie id
-ratingCounts = movies.reduceByKey(lambda x,y : x+y)
+movieCounts = movies.reduceByKey(lambda x,y : x+y)
 
 ## Findn the movie id with the maximum number of ratings
-mostPopularMovie = ratingCounts.max(lambda x:x[1])
+mostPopularMovie = movieCounts.max(lambda x:x[1])
 
 print("The most popular movie is movie ID " + str(mostPopularMovie[0]) + " with " + str(mostPopularMovie[1]) + " ratings.")
