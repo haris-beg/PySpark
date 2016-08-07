@@ -13,7 +13,10 @@ movies = lines.map(lambda x: (x.split()[1], 1))
 ## Calculate the number of ratings for each movie id
 movieCounts = movies.reduceByKey(lambda x,y : x+y)
 
-## Findn the movie id with the maximum number of ratings
-mostPopularMovie = movieCounts.max(lambda x:x[1])
+flipped = movieCounts.map( lambda (x, y) : (y, x) )
+sortedMovies = flipped.sortByKey()
 
-print("The most popular movie is movie ID " + str(mostPopularMovie[0]) + " with " + str(mostPopularMovie[1]) + " ratings.")
+results = sortedMovies.collect()
+
+for result in results:
+    print(result)
