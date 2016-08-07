@@ -8,7 +8,7 @@ conf = SparkConf().setMaster("local").setAppName("PopularMovies")
 sc = SparkContext(conf = conf)
 
 lines = sc.textFile("file:///SparkCourse/ml-100k/u.data")
-movies = lines.map(lambda x: (x.split()[1], 1))
+movies = lines.map(lambda x: (int(x.split()[1]), 1))
 
 ## Calculate the number of ratings for each movie id
 movieCounts = movies.reduceByKey(lambda x,y : x+y)
