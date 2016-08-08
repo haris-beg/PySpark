@@ -18,11 +18,12 @@ lines = sc.textFile("file:///SparkCourse/marvel-graph.txt")
 
 pairings = lines.map(countCoOccurences)
 totalFriendsByCharacter = pairings.reduceByKey(lambda x, y : x + y)
-flipped = totalFriendsByCharacter.map(lambda (x,y) : (y,x))
+## flipped = totalFriendsByCharacter.map(lambda (x,y) : (y,x))
 
-mostPopular = flipped.max()
+## mostPopular = flipped.max()
+mostPopular = totalFriendsByCharacter.max(lambda x:x[1])
 
-mostPopularName = namesRdd.lookup(mostPopular[1])[0]
+mostPopularName = namesRdd.lookup(mostPopular[0])[0]
 
 print(mostPopularName + " is the most popular superhero, with " + \
-    str(mostPopular[0]) + " co-appearances.")
+    str(mostPopular[1]) + " co-appearances.")
